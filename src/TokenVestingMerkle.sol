@@ -36,11 +36,26 @@ contract TokenVestingMerkle is TokenVesting {
         address initialOwner,
         bytes32 _root
     ) external initializer {
+        if (initialOwner == address(0)) {
+            revert Unauthorized();
+        }
+
         nativeToken = token_;
         name = _name;
         symbol = _symbol;
         merkleRoot = _root;
-        transferOwnership(initialOwner);
+        
+        if (address(token_) == NATIVE_TOKEN_ADDRESS) {
+            isNativeToken = true;
+            decimals = 18;
+        } else {
+            isNativeToken = false;
+            decimals = token_.decimals();
+        }
+
+        _grantRole(DEFAULT_ADMIN_ROLE, initialOwner);
+        _grantRole(ROLE_CREATE_SCHEDULE, initialOwner);
+        _transferOwnership(initialOwner);
     }
 
     error InvalidProof();

@@ -23,7 +23,7 @@ contract TokenVesting is
     ReentrancyGuard,
     Pausable,
     AccessControl,
-    Initializable 
+    Initializable
 {
     using SafeERC20 for IERC20Metadata;
 
@@ -506,6 +506,17 @@ contract TokenVesting is
         } else {
             nativeToken.safeTransfer(owner(), amount);
         }
+    }
+
+    /**
+     * @notice Withdraw HYPE if possible.
+     * @dev This should ONLY be used when you sent native mistakingly
+     */
+    function withdrawHYPE() external nonReentrant onlyOwner {
+        uint256 amount = address(this).balance;
+        if (amount == 0) revert InsufficientTokensInContract();
+        (bool success, ) = owner().call{value: amount}("");
+        if (!success) revert TransferFailed();
     }
 
     /**

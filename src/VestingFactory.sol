@@ -42,7 +42,8 @@ contract VestingFactory {
 
     Record[] public allVestingContracts;
     mapping(address => address[]) public vestingsByOwner;
-
+    mapping(address => bool) public isMerkleVesting;
+    
     // ---- Events ----
     /**
      * @notice Emitted when a TokenVesting contract is deployed.
