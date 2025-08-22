@@ -43,7 +43,7 @@ contract VestingFactory {
     Record[] public allVestingContracts;
     mapping(address => address[]) public vestingsByOwner;
     mapping(address => bool) public isMerkleVesting;
-    
+
     // ---- Events ----
     /**
      * @notice Emitted when a TokenVesting contract is deployed.
@@ -149,6 +149,8 @@ contract VestingFactory {
         if (address(token) == address(0)) revert ZeroToken();
 
         vestingAddr = Clones.clone(vestingImplementation);
+        isMerkleVesting[vestingAddr] = false;
+
         TokenVesting(payable(vestingAddr)).initialize(
             token,
             name_,
@@ -159,7 +161,7 @@ contract VestingFactory {
         if (fundAmount > 0) {
             _fundERC20(token, vestingAddr, fundAmount);
         }
-
+        
         _record(vestingAddr, newOwner, address(token), false);
         emit TokenVestingDeployed(vestingAddr, newOwner, address(token));
     }
@@ -179,6 +181,8 @@ contract VestingFactory {
         if (newOwner == address(0)) revert InvalidOwner();
 
         vestingAddr = Clones.clone(vestingImplementation);
+        isMerkleVesting[vestingAddr] = false;
+
         TokenVesting(payable(vestingAddr)).initialize(
             IERC20Metadata(
                 TokenVesting(payable(vestingImplementation))
@@ -230,6 +234,8 @@ contract VestingFactory {
         if (address(token) == address(0)) revert ZeroToken();
 
         vestingAddr = Clones.clone(vestingMerkleImplementation);
+        isMerkleVesting[vestingAddr] = true;
+
         TokenVestingMerkle(payable(vestingAddr)).initializeMerkle(
             token,
             name_,
@@ -268,6 +274,8 @@ contract VestingFactory {
         if (newOwner == address(0)) revert InvalidOwner();
 
         vestingAddr = Clones.clone(vestingMerkleImplementation);
+        isMerkleVesting[vestingAddr] = true;
+        
         TokenVestingMerkle(payable(vestingAddr)).initializeMerkle(
             IERC20Metadata(
                 TokenVesting(payable(vestingImplementation))
@@ -325,6 +333,7 @@ contract VestingFactory {
      * @param vesting The vesting contract address to fund.
      */
     function fundNative(address vesting) external payable {
+        if (vesting == address(0)) revert InvalidAddress();
         if (msg.value == 0) revert ZeroAmount();
         (bool ok, ) = vesting.call{value: msg.value}("");
         require(ok, "Forward native failed");

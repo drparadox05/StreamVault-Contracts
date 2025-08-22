@@ -86,8 +86,8 @@ contract VestingFactoryLocal is Script {
         uint256 amount1,
         uint256 amount2
     ) internal view returns (bytes32 merkleRoot, bytes32 leaf1, bytes32 leaf2) {
-        uint256 startTime = block.timestamp + 180;
-        uint256 cliffDuration = 300;
+        uint256 startTime = block.timestamp + 120;
+        uint256 cliffDuration = 60;
         uint256 vestingDuration = 604800;
         uint256 slicePeriod = 60;
         bool revokable = true;
