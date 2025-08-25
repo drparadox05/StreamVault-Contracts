@@ -203,9 +203,10 @@ forge script script/VestingFactory.s.sol:VestingFactoryScript \
 - Run with verbose flags (`-v`, `-vv`, `-vvv`) for detailed output
 - Check for proper contract state setup in test fixtures
 
-## License
-
-See the repository license or individual license headers in `src/` files.
+**Deployed Contracts**
+- TokenVesting Implementation: https://testnet.purrsec.com/address/0x4F816B31BCC2a7a4bB191f7375E90B6Ec003E164
+- TokenVestingMerkle Implementation: https://testnet.purrsec.com/address/0x61614b9504f778aA2421245965Cc1D6b7E7cE445
+- VestingFactory: https://testnet.purrsec.com/address/0x98ebc6f1badda2bc28540992cdd793c27cbd2247
 
 ---
 
